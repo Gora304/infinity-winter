@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вечная Зима - 3D анимация в стиле Майнкрафт</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a2530;
+            --snow: #f5f7fa;
+            --ice: #a8d0e6;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Шапка */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--dark));
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--ice);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--ice), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--ice);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Герой секция */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--snow);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--ice);
+        }
+
+        .tagline {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--light);
+            margin-top: 20px;
+        }
+
+        /* Основные секции */
+        section {
+            padding: 80px 0;
+        }
+
+        section:nth-child(even) {
+            background-color: rgba(26, 37, 48, 0.7);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--ice);
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: var(--secondary);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Галерея */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .screenshot {
+            background-color: var(--primary);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .screenshot:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .screenshot-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--ice);
+            font-size: 4rem;
+        }
+
+        .screenshot-placeholder span {
+            font-size: 1rem;
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        /* О проекте */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .story-highlight {
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent);
+            margin-top: 30px;
+        }
+
+        .story-highlight h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        /* Создатели */
+        .creators {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .creator-card {
+            background-color: var(--primary);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .creator-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .creator-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .creator-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--ice);
+        }
+
+        /* Контакты */
+        .contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .contact-card {
+            background-color: var(--primary);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 15px;
+            color: var(--ice);
+        }
+
+        .contact-link {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+        .contact-link:hover {
+            background-color: var(--accent);
+        }
+
+        /* Подвал */
+        footer {
+            background-color: var(--primary);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--ice);
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                padding: 20px;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-snowflake"></i></div>
+                    <div class="logo-text">ВЕЧНАЯ ЗИМА</div>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="#project">О проекте</a>
+                    <a href="#gallery">Галерея</a>
+                    <a href="#creators">Создатели</a>
+                    <a href="#contacts">Контакты</a>
+                </div>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Герой секция -->
+    <section class="hero">
+        <div class="container">
+            <h1>ВЕЧНАЯ ЗИМА</h1>
+            <p>3D анимация с графикой из Майнкрафта. История о вакцине от холода, которая сводит людей с ума.</p>
+            <div class="tagline">"Спасение от холода стало началом безумия"</div>
+        </div>
+    </section>
+
+    <!-- О проекте -->
+    <section id="project">
+        <div class="container">
+            <h2 class="section-title">О ПРОЕКТЕ</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>"Вечная Зима" - это амбициозный проект 3D анимации, выполненный в стилистике Minecraft. История разворачивается в мире, охваченном вечным холодом, где человечество находится на грани вымирания.</p>
+                    <p>Ученые разработали вакцину, которая должна была помочь людям выжить в экстремальных условиях. Однако, как оказалось, у лекарства был страшный побочный эффект - оно лишало рассудка тех, кто его принял.</p>
+                    
+                    <div class="story-highlight">
+                        <h3>Сюжетный поворот</h3>
+                        <p>Вакцина от холода, созданная для спасения человечества, оказалась источником безумия. Те, кто принял ее, обрели физическую устойчивость к холоду, но потеряли свою человечность, превратившись в агрессивных существ, не воспринимающих реальность.</p>
+                    </div>
+                </div>
+                
+                <div class="about-text">
+                    <p>Проект создается с использованием современных технологий 3D-графики, сохраняя при этом узнаваемый визуальный стиль Minecraft. Это позволяет создать уникальную атмосферу, сочетающую ностальгическую эстетику с серьезным, драматическим сюжетом.</p>
+                    <p>Над проектом работает команда талантливых создателей, которые стремятся показать историю, затрагивающую глубокие темы выживания, цены прогресса и границ человеческой природы.</p>
+                    <p>Анимация будет доступна на нашем YouTube-канале, а процесс создания и дополнительные материалы можно будет найти в Telegram-канале и на Discord-сервере проекта.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Галерея -->
+    <section id="gallery">
+        <div class="container">
+            <h2 class="section-title">ГАЛЕРЕЯ</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Здесь будут размещены скриншоты, концепт-арты и кадры из анимации</p>
+            
+            <div class="gallery">
+                <!-- Места для скриншотов - 12 штук -->
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Кадр из анимации #1</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Кадр из анимации #2</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Концепт-арт локации</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Персонажи проекта</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Скриншот сцены #1</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Скриншот сцены #2</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Арт вакцины</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Мир Вечной Зимы</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Персонажи до вакцины</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Персонажи после вакцины</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Концепт безумия</span>
+                    </div>
+                </div>
+                
+                <div class="screenshot">
+                    <div class="screenshot-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Финальная сцена</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Создатели -->
+    <section id="creators">
+        <div class="container">
+            <h2 class="section-title">СОЗДАТЕЛИ</h2>
+            <div class="creators">
+                <div class="creator-card">
+                    <div class="creator-icon">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3 class="creator-name">Darkhoney</h3>
+                    <p>Главный режиссер и сценарист проекта. Отвечает за общую концепцию и повествование.</p>
+                </div>
+                
+                <div class="creator-card">
+                    <div class="creator-icon">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <h3 class="creator-name">Гора</h3>
+                    <p>Художник и аниматор. Создает визуальную составляющую, отвечает за графику и анимацию.</p>
+                </div>
+                
+                <div class="creator-card">
+                    <div class="creator-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3 class="creator-name">Daymor</h3>
+                    <p>Технический директор. Отвечает за рендеринг, монтаж и техническую реализацию проекта.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contacts">
+        <div class="container">
+            <h2 class="section-title">КОНТАКТЫ</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Следите за обновлениями проекта и присоединяйтесь к нашему сообществу</p>
+            
+            <div class="contacts">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h3>Telegram Канал</h3>
+                    <p>Новости, анонсы и эксклюзивные материалы</p>
+                    <a href="https://t.me/placeholder" class="contact-link" target="_blank">Перейти в канал</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <h3>Discord Сервер</h3>
+                    <p>Общение с создателями и другими фанатами проекта</p>
+                    <a href="https://discord.gg/placeholder" class="contact-link" target="_blank">Присоединиться</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3>YouTube Канал</h3>
+                    <p>Здесь выйдет полная анимация и дополнительные видео</p>
+                    <a href="https://youtube.com/placeholder" class="contact-link" target="_blank">Подписаться</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">
+                <i class="fas fa-snowflake"></i> ВЕЧНАЯ ЗИМА
+            </div>
+            <p>Проект 3D анимации в стиле Minecraft</p>
+            <p>Создатели: Darkhoney, Гора, Daymor</p>
+            <div class="copyright">
+                &copy; 2023 Проект "Вечная Зима". Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Мобильное меню
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Плавная прокрутка к секциям
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetSection.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Закрываем мобильное меню после клика
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+        
+        // Эффект при прокрутке для скриншотов
+        window.addEventListener('scroll', function() {
+            const screenshots = document.querySelectorAll('.screenshot');
+            const windowHeight = window.innerHeight;
+            
+            screenshots.forEach(screenshot => {
+                const position = screenshot.getBoundingClientRect().top;
+                
+                if (position < windowHeight - 100) {
+                    screenshot.style.opacity = '1';
+                    screenshot.style.transform = 'translateY(0)';
+                }
+            });
+        });
+        
+        // Инициализация анимации для скриншотов
+        document.addEventListener('DOMContentLoaded', function() {
+            const screenshots = document.querySelectorAll('.screenshot');
+            
+            screenshots.forEach(screenshot => {
+                screenshot.style.opacity = '0';
+                screenshot.style.transform = 'translateY(20px)';
+                screenshot.style.transition = 'opacity 0.5s, transform 0.5s';
+            });
+            
+            // Запуск анимации после загрузки
+            setTimeout(() => {
+                window.dispatchEvent(new Event('scroll'));
+            }, 500);
+        });
+    </script>
+</body>
+</html>
